@@ -1,3 +1,3 @@
 sudo docker-compose up -d
-sudo docker exec -it projects_myapp_1 /bin/bash
+sudo docker exec -it container_name /bin/bash
 npm install
