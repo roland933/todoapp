@@ -13,7 +13,7 @@
 
     </head>
     <body>
-        <div class="container w-50 " id="app">
+        <div class="container " id="app">
             <app-component></app-component>
         </div>
 

@@ -5461,6 +5461,7 @@ __webpack_require__.r(__webpack_exports__);
         item: this.item
       }).then(function (res) {
         if (res.status == 201) {
+          console.log(res.status);
           _this.item.name = "";
 
           _this.$emit("reloadlist");
