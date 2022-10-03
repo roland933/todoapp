@@ -61,6 +61,7 @@ class TaskController extends Controller
         $task = Task::find($id);
         if($task) {
             $task->state = $request->item['state'] ? true : false;
+            $task->name = $request->item["name"];
             $task->save();
             return $task;
         }

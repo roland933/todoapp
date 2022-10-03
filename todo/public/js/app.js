@@ -5374,25 +5374,63 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: ["item"],
-  computed: {},
+  data: function data() {
+    return {
+      edit: false,
+      name: this.item.name
+    };
+  },
+  computed: {
+    userCantEdit: function userCantEdit() {
+      return this.item.state == true;
+    },
+    userCantChecked: function userCantChecked() {
+      return this.edit == true;
+    }
+  },
   methods: {
     updateTaskState: function updateTaskState() {
+      var _this = this;
+
       axios.put("api/task/".concat(this.item.id), {
         item: this.item
       }).then(function (res) {
         if (res.status === 200) {
-          console.log(res); //this.$emit("itemchanged");
+          console.log(res);
+          _this.edit = false; //this.$emit("itemchanged");
+        }
+      })["catch"](function (error) {
+        console.log("error from axios put", error);
+      });
+    },
+    editTask: function editTask() {
+      this.edit = !this.edit;
+    },
+    updateTaskName: function updateTaskName() {
+      var _this2 = this;
+
+      if (this.item.name === "") {
+        this.item.name = this.name;
+        return;
+      }
+
+      axios.put("api/task/".concat(this.item.id), {
+        item: this.item
+      }).then(function (res) {
+        if (res.status === 200) {
+          console.log(res);
+          _this2.edit = false; //this.$emit("itemchanged");
         }
       })["catch"](function (error) {
         console.log("error from axios put", error);
       });
     },
     removeTask: function removeTask() {
-      var _this = this;
+      var _this3 = this;
 
       axios["delete"]("api/task/".concat(this.item.id)).then(function (res) {
         if (res.status === 200) {
-          _this.$emit("itemchanged");
+          _this3.$emit("itemchanged");
         }
       })["catch"](function (error) {
         console.log("error from axios delete ", error);
@@ -5585,7 +5623,8 @@ var render = function render() {
     }],
     staticClass: "form-check-input",
     attrs: {
-      type: "checkbox"
+      type: "checkbox",
+      disabled: _vm.userCantChecked
     },
     domProps: {
       checked: Array.isArray(_vm.item.state) ? _vm._i(_vm.item.state, null) > -1 : _vm.item.state
@@ -5614,9 +5653,30 @@ var render = function render() {
     }
   })]), _vm._v(" "), _c("div", {
     staticClass: "flex-fill"
-  }, [_c("span", {
+  }, [_vm.edit ? _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.item.name,
+      expression: "item.name"
+    }],
+    staticClass: "form-control edit-name-input",
+    domProps: {
+      value: _vm.item.name
+    },
+    on: {
+      change: function change($event) {
+        return _vm.updateTaskName();
+      },
+      input: function input($event) {
+        if ($event.target.composing) return;
+
+        _vm.$set(_vm.item, "name", $event.target.value);
+      }
+    }
+  }) : _vm._e(), _vm._v(" "), !_vm.edit ? _c("span", {
     "class": [_vm.item.state ? "completed text-success" : "", "item"]
-  }, [_vm._v("\n            " + _vm._s(_vm.item.name) + "\n        ")])]), _vm._v(" "), _c("div", {}, [_c("button", {
+  }, [_vm._v("\n            " + _vm._s(_vm.item.name) + "\n        ")]) : _vm._e()]), _vm._v(" "), _c("div", {}, [_c("button", {
     staticClass: "delete btn btn-link btn-lg ml-3",
     on: {
       click: function click($event) {
@@ -5625,6 +5685,18 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-times"
+  })]), _vm._v(" "), _c("button", {
+    staticClass: "edit btn btn-link btn-lg ml-3",
+    attrs: {
+      disabled: _vm.userCantEdit
+    },
+    on: {
+      click: function click($event) {
+        return _vm.editTask();
+      }
+    }
+  }, [_c("i", {
+    staticClass: "fas fa-edit"
   })])])]);
 };
 
@@ -11078,7 +11150,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\nspan.completed[data-v-15efce51] {\n    text-decoration: line-through;\n}\n.form-check-input[data-v-15efce51] {\n    width: 2em;\n    height:2em;\n}\n.list-group-item[data-v-15efce51] {\n    border-left:none;\n    border-right:none;\n}\n.list-group-item[data-v-15efce51]:last-child {\n    border-bottom:none;\n}\n.item[data-v-15efce51] {\n    font-size:1.5em;\n}\n.delete i[data-v-15efce51] {\n    font-size:2em;\n}\n.delete[data-v-15efce51] {\n    color:#ddd;\n}\n.delete[data-v-15efce51]:hover {\n    color:red;\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\nspan.completed[data-v-15efce51] {\n    text-decoration: line-through;\n}\n.form-check-input[data-v-15efce51] {\n    width: 1.5em;\n    height:1.5em;\n}\n.list-group-item[data-v-15efce51] {\n    border-left:none;\n    border-right:none;\n}\n.list-group-item[data-v-15efce51]:last-child {\n    border-bottom:none;\n}\n.item[data-v-15efce51],.edit-name-input[data-v-15efce51] {\n    font-size:1.5em;\n}\n.delete i[data-v-15efce51], .edit i[data-v-15efce51] {\n    font-size:1.5em;\n}\n.delete[data-v-15efce51] {\n    color:#ddd;\n}\n.delete[data-v-15efce51]:hover {\n    color:red;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
